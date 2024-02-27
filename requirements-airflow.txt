@@ -1,0 +1,6 @@
+apache-airflow[postgres]==2.6.3
+cryptography==2.9.2
+flask>=2.2,<2.3
+alembic>=1.13.1, <2.0
+werkzeug>=2.0,<3
+sqlalchemy>=1.4.28,<2.0
