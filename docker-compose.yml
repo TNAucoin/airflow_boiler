@@ -4,7 +4,7 @@ x-airflow-common:
   # In order to add custom deps or upgrade provider packages you can use your extended image
   # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose file
   # and uncomment the "build" line below
-  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.8.2}
+  #image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.8.2}
   build: .
   environment:
     &airflow-common-env
