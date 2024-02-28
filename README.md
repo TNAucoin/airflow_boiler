@@ -23,4 +23,4 @@ airflow-boiler/
 ```
 This gives the ability to split your DAGs out per project and share common operators between DAGs, be they coupled to a single project or a decoupled common utility
 
-> All DAGs are presented in a single table, but an effective way to delineate ownership between the DAGs is to configure owners and tag’s for each DAG. It may also be effective to document this information in the DAG docs strings. More details are in the following article.
+> All DAGs are presented in a single table, but an effective way to delineate ownership between the DAGs is to [configure owners and tag’s for each DAG](https://github.com/TNAucoin/airflow_boiler/blob/9ef529f58278e0f8f7226e76a5f0049bf299f5f7/dags/test_dag/test_dag.py#L16). It may also be effective to document this information in the DAG docs strings. [More details are in the following article](https://levelup.gitconnected.com/airflow-dag-and-task-markdown-docs-2c00c72152b4).

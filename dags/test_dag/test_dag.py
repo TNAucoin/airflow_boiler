@@ -13,7 +13,8 @@ dag = DAG(
     start_date=airflow.utils.dates.days_ago(14),
     schedule_interval=None,
     tags=[
-        'test_dag'
+        'project-test',
+        'owner-test',
     ]
 )
 
