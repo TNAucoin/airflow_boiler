@@ -4,4 +4,4 @@ apache-airflow
 dlt
 sqlalchemy>=1.4
 dlt[snowflake]>=0.3.5
-#pyoodbc>=4.0.0
+pyodbc>= 4.0.0
