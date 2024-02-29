@@ -34,7 +34,8 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 USER airflow
 COPY ./config/airflow.cfg /opt/airflow/airflow.cfg
 COPY ./plugins /opt/airflow/plugins
-COPY ./dags /opt/airflow/dags
+COPY ./dags /data/airflow/dags
+COPY ./.dlt /home/airflow/.local/bin/.dlt
 
 # Install pip packages into the container that DAG code needs
 COPY ./requirements.txt /tmp/requirements.txt
