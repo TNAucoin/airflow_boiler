@@ -15,7 +15,7 @@ RUN apt-get update && \
 RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
     wget -qO- https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
     apt-get update && \
-    ACCEPT_EULA=Y apt-get install -y msodbcsql17
+    ACCEPT_EULA=Y apt-get install -y msodbcsql18
 
 # Install Oracle Instant Client
 RUN wget https://download.oracle.com/otn_software/linux/instantclient/214000/oracle-instantclient-basiclite-21.4.0.0.0-1.x86_64.rpm && \
@@ -35,7 +35,7 @@ USER airflow
 COPY ./config/airflow.cfg /opt/airflow/airflow.cfg
 COPY ./plugins /opt/airflow/plugins
 COPY ./dags /data/airflow/dags
-COPY ./.dlt /home/airflow/.local/bin/.dlt
+COPY ./dags/.dlt /home/airflow/.local/bin/.dlt
 
 # Install pip packages into the container that DAG code needs
 COPY ./requirements.txt /tmp/requirements.txt
