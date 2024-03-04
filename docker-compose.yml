@@ -6,6 +6,7 @@ x-airflow-common:
   # and uncomment the "build" line below
   #image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.8.2}
   build: .
+  platform: linux/amd64
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
@@ -22,6 +23,7 @@ x-airflow-common:
     - ./config/airflow.cfg:/opt/airflow/airflow.cfg
     - ./plugins:/opt/airflow/plugins
     - ./dags:/data/airflow/dags
+    - ./dags/.dlt:/home/airflow/.local/bin/.dlt
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -74,6 +76,7 @@ services:
   airflow-scheduler:
     <<: *airflow-common
     command: scheduler
+    working_dir: "/home/airflow/.local/bin"
     healthcheck:
       test: ["CMD-SHELL", 'airflow jobs check --job-type SchedulerJob --hostname "$${HOSTNAME}"']
       interval: 10s
@@ -88,6 +91,7 @@ services:
   airflow-worker:
     <<: *airflow-common
     command: celery worker
+    working_dir: "/home/airflow/.local/bin"
     healthcheck:
       test:
         - "CMD-SHELL"
@@ -108,6 +112,7 @@ services:
   airflow-triggerer:
     <<: *airflow-common
     command: triggerer
+    working_dir: "/home/airflow/.local/bin"
     healthcheck:
       test: ["CMD-SHELL", 'airflow jobs check --job-type TriggererJob --hostname "$${HOSTNAME}"']
       interval: 10s
