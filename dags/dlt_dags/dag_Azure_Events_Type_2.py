@@ -6,7 +6,8 @@ from airflow.decorators import dag
 from dlt.common import pendulum
 from dlt.helpers.airflow_helper import PipelineTasksGroup
 from dlt_dags.sql_database import Table, sql_database, sql_table
-
+from datetime import timedelta
+from functools import lru_cache
 #from sql_database_pipeline import load_select_tables_from_database
 
 default_task_args = {
@@ -17,19 +18,26 @@ default_task_args = {
     'execution_timeout': timedelta(seconds=5),
 }
 
+@lru_cache(maxsize=1)
+def get_azure_db_connection_string():
+    return dlt.secrets["sources.sql_database.credentials"]["connection_string"]
 
 @dag(
     schedule_interval='@daily',
     start_date=pendulum.datetime(2024, 2, 27),
     catchup=False,
     max_active_runs=1,
-    default_args=default_task_args
+    default_args= {
+        'execution_timeout': timedelta(minutes=10)
+    },
+
 )
+
 def load_azure_events_data():
     # set `use_data_folder` to True to store temporary data on the `data` bucket. Use only when it does not fit on the local storage
     tasks = PipelineTasksGroup("Azure_Event", fail_task_if_any_job_failed=True, use_data_folder=False, wipe_local_data=True)
 
-    azure_credentials = dlt.secrets["sources.sql_database.credentials"]["connection_string"]
+    azure_credentials = get_azure_db_connection_string()
     #snow_creds = dlt.secrets["destination.snowflake.credentials.database"]
     # import your source from pipeline script
     #from dlt_dags.sql_database_pipeline import load_select_tables_from_database
@@ -45,7 +53,7 @@ def load_azure_events_data():
     source_1 = sql_database(azure_credentials, schema='dbo').with_resources("EventType")
                          
     # create the source, the "serialize" decompose option will converts dlt resources into Airflow tasks. use "none" to disable it
-    tasks.add_run(pipeline, source_1, decompose="serialize", trigger_rule="all_done", retries=0, provide_context=True)
+    tasks.add_run(pipeline, source_1, decompose="none", trigger_rule="all_done", retries=0, provide_context=True)
     
     info = pipeline.run(source_1, write_disposition="replace")
     print(info)
